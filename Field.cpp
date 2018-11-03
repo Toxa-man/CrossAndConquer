@@ -64,6 +64,9 @@ int Field::getCellStatus(QPoint cellCoords) const
 void Field::checkCellClosing(int playerId, Field::BorderOrientaion orientation, const QPoint &point)
 {
     bool isClosed = true;
+    if (orientation == Horizontal){
+        if (horizontalBorders[point.x() - 1] [point.y()] == playerId &&)
+    }
 
 }
 
