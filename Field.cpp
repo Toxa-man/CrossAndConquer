@@ -5,18 +5,23 @@ Field::Field(int size):
     size(size)
 {
     cells.resize(size);
-    for (auto&& cell : cells){
+    for (auto& cell : cells){
         cell.resize(size);
         std::fill(cell.begin(), cell.end(), emptyCellId);
     }
 
     horizontalBorders.resize(size + 1);
-    for (int i(0); i < horizontalBorders.size(); i++){
-        horizontalBorders[i].resize(size);
-        std::fill(horizontalBorders[i].begin(), horizontalBorders[i].end(), uncheckedBorderId);
+    for (auto& vec : horizontalBorders){
+        vec.resize(size);
+        std::fill(vec.begin(), vec.end(), uncheckedBorderId);
     }
     std::fill(horizontalBorders.first().begin(), horizontalBorders.first().end(), fieldBorderId);
     std::fill(horizontalBorders.last().begin(), horizontalBorders.last().end(), fieldBorderId);
+    //for tests:
+//    horizontalBorders[1][0] = 0;
+//    horizontalBorders[2][1] = 0;
+//    horizontalBorders[3][2] = 0;
+//    horizontalBorders[4][5] = 0;
 
 
     verticalBorders.resize(size + 1);
@@ -49,7 +54,11 @@ Field::MoveResult Field::doMove(int playerId, Field::BorderOrientaion orientatio
         return InvalidPosition;
     }
     vec[borderCoords.x()][borderCoords.y()] = playerId;
-    checkCellClosing(playerId, orientation, borderCoords);
+    auto point =  checkCellClosing(orientation, borderCoords);
+    if (point.x() != -1 && point.y() != -1){
+        cells[point.x()][point.y()] = playerId;
+        return CellClosed;
+    }
     return Success;
 }
 
@@ -61,13 +70,65 @@ int Field::getCellStatus(QPoint cellCoords) const
     return cells[cellCoords.x()][cellCoords.y()];
 }
 
-void Field::checkCellClosing(int playerId, Field::BorderOrientaion orientation, const QPoint &point)
+std::tuple<const Field::Matrix<int> &, const Field::Matrix<int> &, const Field::Matrix<int> &> Field::getFieldData() const
 {
-    bool isClosed = true;
-    if (orientation == Horizontal){
-        if (horizontalBorders[point.x() - 1] [point.y()] == playerId &&)
-    }
+    return std::make_tuple(std::cref(horizontalBorders), std::cref(verticalBorders), std::cref(cells));
+}
 
+int Field::getWinnerId() const
+{
+    return winnerId;
+}
+
+QPoint Field::checkCellClosing(Field::BorderOrientaion orientation, const QPoint &point)
+{
+    if (orientation == Horizontal){
+        if (playerOrFieldBorder( BorderOrientaion::Horizontal, point - QPoint(1, 0)) &&
+            playerOrFieldBorder( BorderOrientaion::Vertical, QPoint(point.y(), point.x() - 1)) &&
+            playerOrFieldBorder( BorderOrientaion::Vertical, QPoint(point.y() + 1, point.x() - 1))){
+            return {point.x() - 1, point.y()};
+        }
+        if (playerOrFieldBorder( BorderOrientaion::Horizontal, point + QPoint(1, 0)) &&
+            playerOrFieldBorder( BorderOrientaion::Vertical, QPoint(point.y(), point.x())) &&
+            playerOrFieldBorder( BorderOrientaion::Vertical, QPoint(point.y() + 1, point.x()))){
+            return {point.x(), point.y()};
+        }
+    } else {
+        if (playerOrFieldBorder( BorderOrientaion::Vertical, point - QPoint(1, 0)) &&
+            playerOrFieldBorder( BorderOrientaion::Horizontal, QPoint(point.y(), point.x() - 1)) &&
+            playerOrFieldBorder( BorderOrientaion::Horizontal, QPoint(point.y() + 1, point.x() - 1))){
+            return {point.y() , point.x()  -1};
+        }
+        if (playerOrFieldBorder( BorderOrientaion::Vertical, point + QPoint(1, 0)) &&
+            playerOrFieldBorder( BorderOrientaion::Horizontal, QPoint(point.y(), point.x())) &&
+            playerOrFieldBorder( BorderOrientaion::Horizontal, QPoint(point.y() + 1, point.x()))){
+            return {point.y(), point.x()};
+        }
+    }
+    return {-1, -1};
+}
+
+bool Field::playerOrFieldBorder(Field::BorderOrientaion orientation, const QPoint &point)
+{
+    return getBordersByOrientation(orientation)[point.x()][point.y()] != uncheckedBorderId;
+
+}
+
+Field::Matrix<int>& Field::getBordersByOrientation(Field::BorderOrientaion orientation)
+{
+    return orientation == BorderOrientaion::Horizontal ? horizontalBorders : verticalBorders;
+}
+
+bool Field::isGameEnded() const
+{
+    for (const auto& rows : cells){
+        for (const auto& cell : rows){
+            if (cell == emptyCellId){
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 

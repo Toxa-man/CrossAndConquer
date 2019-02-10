@@ -7,6 +7,9 @@
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+CONFIG += c++1z
+
+#QMAKE_CXXFLAGS += /std:c++1z
 
 TARGET = CrossAndConquer
 TEMPLATE = app
@@ -27,11 +30,13 @@ QMAKE_CXXFLAGS += /std:c++17
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    Field.cpp
+    Field.cpp \
+    FieldView.cpp
 
 HEADERS += \
         mainwindow.h \
-    Field.h
+    Field.h \
+    FieldView.h
 
 FORMS += \
         mainwindow.ui
@@ -40,3 +45,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    images.qrc
