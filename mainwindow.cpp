@@ -7,6 +7,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    cursor({20, 20}),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -14,6 +15,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->moveBtn, &QPushButton::clicked, [&](){
        auto dir = ui->hor->isChecked() ? Field::Horizontal : Field::Vertical;
        switch (field.doMove(ui->idEdit->text().toInt(), dir, {ui->xEdit->text().toInt(), ui->yEdit->text().toInt()})) {
+       case Field::MoveResult::Success: fieldView->update(); break;
+       case Field::MoveResult::InvalidPosition: qDebug() << "invalid position"; break;
+       case Field::CellClosed: fieldView->update(); qDebug() << "cell closed"; break;
+       }
+    });
+
+    connect(fieldView.get(), &FieldView::doMove, [&](Field::BorderOrientaion orientation, QPoint borderCoords){
+       switch (field.doMove(ui->idEdit->text().toInt(), orientation, borderCoords)) {
        case Field::MoveResult::Success: fieldView->update(); break;
        case Field::MoveResult::InvalidPosition: qDebug() << "invalid position"; break;
        case Field::CellClosed: fieldView->update(); qDebug() << "cell closed"; break;

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <memory>
 #include "Field.h"
+#include "Cursor.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,8 @@ private:
     const int fieldSize = 8;
     const int cellBoardInPixels = 50;
     Field field{fieldSize};
+    Cursor cursor;
+    void doMove();
     void mousePressEvent(QMouseEvent *event) final;
     void createField();
     void redrawField();

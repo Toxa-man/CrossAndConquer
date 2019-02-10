@@ -31,12 +31,15 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     Field.cpp \
-    FieldView.cpp
+    FieldView.cpp \
+    Cursor.cpp
 
 HEADERS += \
         mainwindow.h \
     Field.h \
-    FieldView.h
+    FieldView.h \
+    Cursor.h \
+    globals.h
 
 FORMS += \
         mainwindow.ui

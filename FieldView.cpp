@@ -2,14 +2,12 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QDebug>
-#include "Field.h"
 
 FieldView::FieldView(const class Field& field, QWidget *parent) : QWidget(parent),
-    field(field)
+    field(field),
+    cursor({20, 20})
 {
-    QPixmap img = QPixmap(":/pictures/img/cursor.png").scaled(250, 250);
-    QCursor cursor(img, 0, 0);
-    setCursor(cursor);
+    setCursor(cursor.getCursor());
 }
 
 void FieldView::paintEvent(QPaintEvent *event)
@@ -47,15 +45,47 @@ void FieldView::paintEvent(QPaintEvent *event)
 
 void FieldView::mouseReleaseEvent(QMouseEvent *event)
 {
-    QRect pointerRect {event->x(), event->y(), 7, 7};
-    qDebug() << "event: " << event->pos();
-    //    field.doMove(0)
+//    QRect pointerRect {event->x(), event->y(), 7, 7};
+//    qDebug() << "event: " << event->pos();
+//    //    field.doMove(0)
     QWidget::mouseReleaseEvent(event);
+//    QRect::intersected()
 }
 
 void FieldView::mousePressEvent(QMouseEvent *event)
 {
     qDebug() << "event: " << event->pos();
+    int indexX = event->pos().x() / pixelInCell;
+    int indexY = event->pos().y() / pixelInCell;
+    QRect topLeft{indexX * pixelInCell, indexY * pixelInCell, pixelInCell, pixelInCell};
+    QRect botRight{(indexX + 1) * pixelInCell, (indexY + 1) * pixelInCell, pixelInCell, pixelInCell};
+    QRect curs {event->pos(), cursor.getSize()};
+    auto tlInt = topLeft.intersected(curs);
+    auto brInt = botRight.intersected(curs);
+    auto tlSize = getMaxLength(tlInt);
+    auto brSize = getMaxLength(brInt);
+    QPoint resultPoint;
+    Field::BorderOrientaion orient = Field::Horizontal;
+    if ((tlSize.second > brSize.second) ){
+        if (!topLeft.contains(curs)){
+            if (tlSize.first == Field::Horizontal){
+                resultPoint = {indexY + 1, indexX};
+            } else {
+                resultPoint = {indexX + 1, indexY};
+            }
+            orient = tlSize.first;
+        }
+    } else {
+        if (!botRight.contains(curs)){
+            if (brSize.first == Field::Horizontal){
+                resultPoint = {indexY + 1, indexX + 1};
+            } else {
+                resultPoint = {indexX + 1, indexY + 1};
+            }
+            orient = brSize.first;
+        }
+    }
+    emit doMove(orient, resultPoint);
     event->accept();
 }
 
@@ -77,3 +107,13 @@ QColor FieldView::getColorById(int id)
         break;
     }
 }
+
+std::pair<Field::BorderOrientaion, int> FieldView::getMaxLength(const QRect &rect)
+{
+    if (rect.width() > rect.height()){
+        return {Field::Horizontal, rect.width()};
+    } else {
+        return {Field::Vertical, rect.height()};
+    }
+}
+

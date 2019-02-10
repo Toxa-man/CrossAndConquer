@@ -45,18 +45,20 @@ Field::MoveResult Field::doMove(int playerId, Field::BorderOrientaion orientatio
     }
     auto& vec = orientation == Horizontal ? horizontalBorders : verticalBorders;
     if (borderCoords.x() >= vec.size()){
-        throw OutOfBorderExc(borderCoords);
+        return InvalidPosition;
     }
     if (borderCoords.y() >= vec[borderCoords.x()].size()){
-        throw OutOfBorderExc(borderCoords);
+        return InvalidPosition;
     }
     if (vec[borderCoords.x()][borderCoords.y()] != uncheckedBorderId){
         return InvalidPosition;
     }
     vec[borderCoords.x()][borderCoords.y()] = playerId;
-    auto point =  checkCellClosing(orientation, borderCoords);
-    if (point.x() != -1 && point.y() != -1){
-        cells[point.x()][point.y()] = playerId;
+    auto points =  checkCellClosing(orientation, borderCoords);
+    if (!points.isEmpty()){
+        for(const auto& point: points){
+            cells[point.x()][point.y()] = playerId;
+        }
         return CellClosed;
     }
     return Success;
@@ -80,32 +82,33 @@ int Field::getWinnerId() const
     return winnerId;
 }
 
-QPoint Field::checkCellClosing(Field::BorderOrientaion orientation, const QPoint &point)
+QVector<QPoint> Field::checkCellClosing(Field::BorderOrientaion orientation, const QPoint &point)
 {
+    QVector<QPoint> result;
     if (orientation == Horizontal){
         if (playerOrFieldBorder( BorderOrientaion::Horizontal, point - QPoint(1, 0)) &&
             playerOrFieldBorder( BorderOrientaion::Vertical, QPoint(point.y(), point.x() - 1)) &&
             playerOrFieldBorder( BorderOrientaion::Vertical, QPoint(point.y() + 1, point.x() - 1))){
-            return {point.x() - 1, point.y()};
+            result.push_back({point.x() - 1, point.y()});
         }
         if (playerOrFieldBorder( BorderOrientaion::Horizontal, point + QPoint(1, 0)) &&
             playerOrFieldBorder( BorderOrientaion::Vertical, QPoint(point.y(), point.x())) &&
             playerOrFieldBorder( BorderOrientaion::Vertical, QPoint(point.y() + 1, point.x()))){
-            return {point.x(), point.y()};
+            result.push_back({point.x(), point.y()});
         }
     } else {
         if (playerOrFieldBorder( BorderOrientaion::Vertical, point - QPoint(1, 0)) &&
             playerOrFieldBorder( BorderOrientaion::Horizontal, QPoint(point.y(), point.x() - 1)) &&
             playerOrFieldBorder( BorderOrientaion::Horizontal, QPoint(point.y() + 1, point.x() - 1))){
-            return {point.y() , point.x()  -1};
+            result.push_back({point.y() , point.x()  -1});
         }
         if (playerOrFieldBorder( BorderOrientaion::Vertical, point + QPoint(1, 0)) &&
             playerOrFieldBorder( BorderOrientaion::Horizontal, QPoint(point.y(), point.x())) &&
             playerOrFieldBorder( BorderOrientaion::Horizontal, QPoint(point.y() + 1, point.x()))){
-            return {point.y(), point.x()};
+            result.push_back({point.y(), point.x()});
         }
     }
-    return {-1, -1};
+    return result;
 }
 
 bool Field::playerOrFieldBorder(Field::BorderOrientaion orientation, const QPoint &point)

@@ -31,6 +31,7 @@ public:
     std::tuple<const Matrix<int>&, const Matrix<int>&, const Matrix<int>&> getFieldData() const;
     int getWinnerId() const;
     bool isGameEnded() const;
+    //debug:
 
 private:
     Matrix<int> horizontalBorders;
@@ -41,7 +42,7 @@ private:
     const int fieldBorderId = -2;
     int winnerId = -1;
     int size;
-    QPoint checkCellClosing(Field::BorderOrientaion orientation, const QPoint &point);
+    QVector<QPoint> checkCellClosing(Field::BorderOrientaion orientation, const QPoint &point);
     bool playerOrFieldBorder(Field::BorderOrientaion orientation, const QPoint &point);
     Matrix<int>& getBordersByOrientation(Field::BorderOrientaion orientation);
     int countWinnerId() const;
