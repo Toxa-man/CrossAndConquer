@@ -1,9 +1,21 @@
 #include "Field.h"
+#include <map>
 #include <algorithm>
 
-Field::Field(int size):
-    size(size)
+Field::Field(int size, const QVector<idT>& ids):
+    size(size),
+    gen(std::random_device{}())
 {
+    for (const auto& id: ids){
+        playersStats[id] = 0;
+    }
+
+    //obtaining random player to start
+    currentPlayer = playersStats.begin();
+    std::uniform_int_distribution<idT> dist(0, ids.size() - 1);
+    std::advance(currentPlayer, dist(gen));
+
+
     cells.resize(size);
     for (auto& cell : cells){
         cell.resize(size);
@@ -43,6 +55,9 @@ Field::MoveResult Field::doMove(int playerId, Field::BorderOrientaion orientatio
     if (playerId < 0){
         throw WrongIdExc(playerId);
     }
+    if (playerId != currentPlayer.key()){
+        return InvalidPosition;
+    }
     auto& vec = orientation == Horizontal ? horizontalBorders : verticalBorders;
     if (borderCoords.x() >= vec.size()){
         return InvalidPosition;
@@ -59,7 +74,14 @@ Field::MoveResult Field::doMove(int playerId, Field::BorderOrientaion orientatio
         for(const auto& point: points){
             cells[point.x()][point.y()] = playerId;
         }
+        if (checkEndGame()){
+            return GameFinished;
+        }
         return CellClosed;
+    }
+    std::advance(currentPlayer, 1);
+    if (currentPlayer == playersStats.end()){
+        currentPlayer = playersStats.begin();
     }
     return Success;
 }
@@ -77,7 +99,7 @@ std::tuple<const Field::Matrix<int> &, const Field::Matrix<int> &, const Field::
     return std::make_tuple(std::cref(horizontalBorders), std::cref(verticalBorders), std::cref(cells));
 }
 
-int Field::getWinnerId() const
+Field::idT Field::getWinnerId() const
 {
     return winnerId;
 }
@@ -122,6 +144,23 @@ Field::Matrix<int>& Field::getBordersByOrientation(Field::BorderOrientaion orien
     return orientation == BorderOrientaion::Horizontal ? horizontalBorders : verticalBorders;
 }
 
+bool Field::checkEndGame()
+{
+    for (const auto& row : cells) {
+        if (row.contains(emptyCellId)){
+            return false;
+        }
+    }
+    for (const auto& row : cells) {
+        for (const auto& cell : row) {
+            playersStats[cell]++;
+        }
+    }
+    auto maxPlayer = std::max_element(playersStats.begin(), playersStats.end());
+    winnerId = maxPlayer.key();
+    return true;
+}
+
 bool Field::isGameEnded() const
 {
     for (const auto& rows : cells){
@@ -132,6 +171,16 @@ bool Field::isGameEnded() const
         }
     }
     return true;
+}
+
+Field::idT Field::getCurrentPlayerId() const
+{
+    return currentPlayer.key();
+}
+
+QMap<Field::idT, qint32> Field::getGameStatistics() const
+{
+    return playersStats;
 }
 
 
