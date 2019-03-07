@@ -99,7 +99,7 @@ std::tuple<const Field::Matrix<int> &, const Field::Matrix<int> &, const Field::
     return std::make_tuple(std::cref(horizontalBorders), std::cref(verticalBorders), std::cref(cells));
 }
 
-Field::idT Field::getWinnerId() const
+idT Field::getWinnerId() const
 {
     return winnerId;
 }
@@ -173,12 +173,12 @@ bool Field::isGameEnded() const
     return true;
 }
 
-Field::idT Field::getCurrentPlayerId() const
+idT Field::getCurrentPlayerId() const
 {
     return currentPlayer.key();
 }
 
-QMap<Field::idT, qint32> Field::getGameStatistics() const
+QMap<idT, qint32> Field::getGameStatistics() const
 {
     return playersStats;
 }

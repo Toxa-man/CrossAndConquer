@@ -21,7 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
     std::unique_ptr<class FieldView> fieldView;
-    const int fieldSize = 2;
+    const int fieldSize = 8;
     const int cellBoardInPixels = 50;
     Field field{fieldSize, {0, 1}};
     Cursor cursor;

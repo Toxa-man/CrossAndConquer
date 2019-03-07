@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.0
+** Created by: Qt User Interface Compiler version 5.11.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -45,50 +45,50 @@ public:
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+            MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(828, 645);
         centralWidget = new QWidget(MainWindow);
-        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        centralWidget->setObjectName(QStringLiteral("centralWidget"));
         xEdit = new QLineEdit(centralWidget);
-        xEdit->setObjectName(QString::fromUtf8("xEdit"));
+        xEdit->setObjectName(QStringLiteral("xEdit"));
         xEdit->setGeometry(QRect(130, 80, 31, 21));
         yEdit = new QLineEdit(centralWidget);
-        yEdit->setObjectName(QString::fromUtf8("yEdit"));
+        yEdit->setObjectName(QStringLiteral("yEdit"));
         yEdit->setGeometry(QRect(190, 80, 31, 21));
         moveBtn = new QPushButton(centralWidget);
-        moveBtn->setObjectName(QString::fromUtf8("moveBtn"));
+        moveBtn->setObjectName(QStringLiteral("moveBtn"));
         moveBtn->setGeometry(QRect(390, 80, 75, 23));
         label = new QLabel(centralWidget);
-        label->setObjectName(QString::fromUtf8("label"));
+        label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(70, 50, 47, 13));
         label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setGeometry(QRect(140, 50, 47, 13));
         idEdit = new QLineEdit(centralWidget);
-        idEdit->setObjectName(QString::fromUtf8("idEdit"));
+        idEdit->setObjectName(QStringLiteral("idEdit"));
         idEdit->setGeometry(QRect(60, 80, 31, 21));
         label_3 = new QLabel(centralWidget);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setObjectName(QStringLiteral("label_3"));
         label_3->setGeometry(QRect(200, 50, 47, 13));
         groupBox = new QGroupBox(centralWidget);
-        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setObjectName(QStringLiteral("groupBox"));
         groupBox->setGeometry(QRect(250, 40, 120, 91));
         hor = new QRadioButton(groupBox);
-        hor->setObjectName(QString::fromUtf8("hor"));
+        hor->setObjectName(QStringLiteral("hor"));
         hor->setGeometry(QRect(20, 30, 82, 17));
         ver = new QRadioButton(groupBox);
-        ver->setObjectName(QString::fromUtf8("ver"));
+        ver->setObjectName(QStringLiteral("ver"));
         ver->setGeometry(QRect(20, 60, 82, 17));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
-        menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 828, 21));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
+        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
         retranslateUi(MainWindow);

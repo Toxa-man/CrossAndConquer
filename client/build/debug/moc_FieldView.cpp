@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'FieldView.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.11.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'FieldView.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.12.0. It"
+#error "This file was generated using the moc from 5.11.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -47,7 +47,7 @@ QT_MOC_LITERAL(5, 54, 12) // "borderCoords"
 static const uint qt_meta_data_FieldView[] = {
 
  // content:
-       8,       // revision
+       7,       // revision
        0,       // classname
        0,    0, // classinfo
        1,   14, // methods
@@ -87,14 +87,10 @@ void FieldView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     }
 }
 
-QT_INIT_METAOBJECT const QMetaObject FieldView::staticMetaObject = { {
-    &QWidget::staticMetaObject,
-    qt_meta_stringdata_FieldView.data,
-    qt_meta_data_FieldView,
-    qt_static_metacall,
-    nullptr,
-    nullptr
-} };
+QT_INIT_METAOBJECT const QMetaObject FieldView::staticMetaObject = {
+    { &QWidget::staticMetaObject, qt_meta_stringdata_FieldView.data,
+      qt_meta_data_FieldView,  qt_static_metacall, nullptr, nullptr}
+};
 
 
 const QMetaObject *FieldView::metaObject() const

@@ -6,6 +6,8 @@
 #include <exception>
 #include <random>
 
+#include "globals.h"
+
 struct OutOfBorderExc : public std::exception
 {
     OutOfBorderExc(QPoint point) : point(point) {}
@@ -24,9 +26,8 @@ class Field
 {
 public:
     template <typename T> using Matrix = QVector<QVector<T>>;
-    using idT = qint32;
 
-    enum MoveResult {InvalidPosition, Success, CellClosed, GameFinished};
+    enum MoveResult : quint8 {InvalidPosition, Success, CellClosed, GameFinished};
     enum BorderOrientaion {Horizontal, Vertical};
 
     Field(int size, const QVector<idT>& ids);
